@@ -1,5 +1,5 @@
-/* ROI Editing Toolkit - single toolbar tool */
+/* ROI Editing Toolkit - plain ImageJ action tool */
 
-macro "ROI Zoom Control Action Tool - icon:ROI_Editing_Toolkit_Zoom.png" {
+macro "ROI Zoom Control Action Tool" {
     doCommand("Zoom Control");
 }
