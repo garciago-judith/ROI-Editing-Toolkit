@@ -22,22 +22,31 @@ A persistent, resizable vertical zoom slider for the currently active ImageJ ima
 
 ## Toolbar integration
 
-The toolbar entries now use plain ImageJ macro action tools with default letter icons. No PNG icons are loaded.
+Both toolbar buttons are provided in one combined ImageJ toolset:
 
-The tools are installed through ImageJ's native `Plugins > Tools` mechanism. This appends them as plugin tools and does not replace the existing toolset.
+```text
+macros/toolsets/ROI Editing Toolkit.ijm
+```
+
+Load the toolset once from the `>>` menu and both buttons appear together.
+
+The icons are encoded directly in the macro-tool names. No PNG files are loaded, and no separate plugin tools or runtime toolbar installer are used.
+
+Selecting a toolset replaces the currently active custom toolset. This is standard ImageJ behavior. The normal built-in ImageJ toolbar tools remain available.
 
 ## Installation
 
 1. Download or clone this repository.
 2. Copy the repository contents into the root of your `Fiji.app` installation, preserving the folder structure.
-3. Remove any older PNG icon files and toolsets listed below.
+3. Remove the obsolete files listed under **Cleaning an older installation**.
 4. Restart Fiji.
-5. Open the `>>` menu at the right side of the ImageJ toolbar.
-6. Select each tool once:
-   - `ROI Delete Action Tool`
-   - `ROI Zoom Control Action Tool`
+5. Click `>>` at the right side of the ImageJ toolbar.
+6. Select **ROI Editing Toolkit**.
 
-ImageJ loads these from `plugins/Tools` and appends them to the toolbar without clearing the tools already present.
+Both buttons will be loaded together:
+
+- **Delete ROIs in Region**
+- **Zoom Control**
 
 The commands are also available directly from:
 
@@ -59,7 +68,7 @@ The drawn deletion region remains selected so it can be adjusted and reused.
 
 ### Zoom Control
 
-1. Open **Zoom Control** from the Plugins menu or toolbar.
+1. Open **Zoom Control** from the toolbar or Plugins menu.
 2. Activate the image window you want to control.
 3. Move the vertical slider, or use **Fit** or **100%**.
 
@@ -72,9 +81,8 @@ scripts/Plugins/ROI_Editing_Toolkit/
   Delete_ROIs_in_Region.groovy
   Zoom_Control.groovy
 
-plugins/Tools/
-  ROI_Delete_Action_Tool.ijm
-  ROI_Zoom_Control_Action_Tool.ijm
+macros/toolsets/
+  ROI Editing Toolkit.ijm
 ```
 
 ## Requirements
@@ -84,18 +92,20 @@ plugins/Tools/
 
 ## Cleaning an older installation
 
-Remove these older files if present:
+Remove these obsolete files if present:
 
 ```text
 Fiji.app/macros/toolsets/ROI Tools.ijm
 Fiji.app/macros/toolsets/Delete ROIs in Region.ijm
 Fiji.app/macros/toolsets/Vertical Zoom Slider.ijm
+Fiji.app/plugins/Tools/ROI_Delete_Action_Tool.ijm
+Fiji.app/plugins/Tools/ROI_Zoom_Control_Action_Tool.ijm
 Fiji.app/scripts/Plugins/ROI_Editing_Toolkit/Install_Toolbar_Icons.groovy
 Fiji.app/macros/toolsets/icons/ROI_Editing_Toolkit_Delete.png
 Fiji.app/macros/toolsets/icons/ROI_Editing_Toolkit_Zoom.png
 ```
 
-Then replace the two `.ijm` files under `Fiji.app/plugins/Tools` with the current repository versions and restart Fiji.
+Then copy the current repository files into `Fiji.app`, restart Fiji, and select **ROI Editing Toolkit** from the toolbar `>>` menu.
 
 ## Status
 
