@@ -1,5 +1,5 @@
-/* ROI Editing Toolkit - single toolbar tool */
+/* ROI Editing Toolkit - plain ImageJ action tool */
 
-macro "ROI Delete Action Tool - icon:ROI_Editing_Toolkit_Delete.png" {
+macro "ROI Delete Action Tool" {
     doCommand("Delete ROIs in Region");
 }
