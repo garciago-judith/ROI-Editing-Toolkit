@@ -27,16 +27,19 @@ The toolkit includes two distinct toolbar icons:
 - Red freehand region with an X: **Delete ROIs in Region**
 - Blue magnifying glass with a plus: **Zoom Control**
 
-The installer adds each icon as an individual toolbar tool. It does not load a replacement toolset, so existing custom toolbar tools are preserved.
+The toolbar tools are installed through ImageJ's native `Plugins > Tools` mechanism. This appends them as plugin tools and does not replace the existing toolset.
 
 ## Installation
 
 1. Download or clone this repository.
 2. Copy the repository contents into the root of your `Fiji.app` installation, preserving the folder structure.
 3. Restart Fiji.
-4. Run:
+4. Open the `>>` menu at the right side of the ImageJ toolbar.
+5. Select each tool once:
+   - `ROI Delete Action Tool`
+   - `ROI Zoom Control Action Tool`
 
-   `Plugins > ROI Editing Toolkit > Install Toolbar Icons`
+ImageJ loads these from `plugins/Tools` and appends them to the toolbar without clearing the tools already present.
 
 The commands are also available directly from:
 
@@ -70,7 +73,6 @@ The slider follows whichever image window is currently active.
 scripts/Plugins/ROI_Editing_Toolkit/
   Delete_ROIs_in_Region.groovy
   Zoom_Control.groovy
-  Install_Toolbar_Icons.groovy
 
 plugins/Tools/
   ROI_Delete_Action_Tool.ijm
@@ -86,9 +88,9 @@ macros/toolsets/icons/
 - Fiji/ImageJ with Groovy scripting support
 - ROI Manager ROIs should have slice positions assigned when using slice-specific deletion
 
-## Upgrading from the earlier toolset version
+## Upgrading from the earlier toolset or installer version
 
-Older `macros/toolsets` files could replace existing custom tools when selected from the `>>` toolbar menu. They are not used by this version.
+Older `macros/toolsets` files could replace existing custom tools when selected from the `>>` toolbar menu. The earlier `Install Toolbar Icons` command could also block the ImageJ menu event thread on some systems. Neither mechanism is used by the current version.
 
 Remove these older files if present:
 
@@ -96,12 +98,11 @@ Remove these older files if present:
 Fiji.app/macros/toolsets/ROI Tools.ijm
 Fiji.app/macros/toolsets/Delete ROIs in Region.ijm
 Fiji.app/macros/toolsets/Vertical Zoom Slider.ijm
+Fiji.app/scripts/Plugins/ROI_Editing_Toolkit/Install_Toolbar_Icons.groovy
 ```
 
-Then use:
-
-`Plugins > ROI Editing Toolkit > Install Toolbar Icons`
+Then restart Fiji and load the two tools from the toolbar `>>` menu.
 
 ## Status
 
-Initial public version. The scripts were developed and tested iteratively against current Fiji/ImageJ behavior; please report version-specific errors through GitHub Issues.
+Initial public version. Please report Fiji-version-specific errors through GitHub Issues.
