@@ -4,11 +4,26 @@ A small collection of Fiji/ImageJ utilities for manual ROI review and editing.
 
 ## Included tools
 
-### Delete ROIs in Region
+### ROI Region Actions
 
-Draw a freehand area selection and delete ROI Manager entries that fall within it on the current image slice. The required percentage of ROI area inside the selection is configurable.
+Draw a freehand area selection and identify ROI Manager entries that fall within it on the current image slice. The required percentage of ROI area inside the selection is configurable.
 
-The tool deliberately skips ROIs without an assigned slice position so that ROIs from other planes are not deleted accidentally.
+The same detected ROIs can then be processed in either of two ways:
+
+- **Delete ROIs on current slice**
+- **Set group for ROIs in region**
+
+The group action:
+
+- assigns the selected ROIs to the group entered in the dialog;
+- sets their ROI position to `0`;
+- sets their outline color to magenta;
+- sets their line width to `0`;
+- leaves the affected ROI Manager rows selected.
+
+The tool deliberately skips ROIs without an assigned slice position when finding candidates, so ROIs from unrelated planes are not processed accidentally.
+
+> **Position note:** after the group action sets an ROI position to `0`, that ROI is no longer associated with a particular slice. It will therefore be skipped by later slice-specific region searches.
 
 ### Zoom Control
 
@@ -45,7 +60,7 @@ Selecting a toolset replaces the currently active custom toolset. This is standa
 
 Both buttons will be loaded together:
 
-- **Delete ROIs in Region**
+- **ROI Region Actions**
 - **Zoom Control**
 
 The commands are also available directly from:
@@ -55,16 +70,36 @@ The commands are also available directly from:
 
 ## Usage
 
-### Delete ROIs in Region
+### Delete ROIs in a region
 
 1. Open an image stack and the ROI Manager.
 2. Navigate to the Z-slice to edit.
 3. Draw a freehand **area** selection around the ROIs to remove.
-4. Open **Delete ROIs in Region**.
+4. Open **ROI Region Actions**.
 5. Set the minimum percentage of each ROI that must lie inside the selection.
 6. Click **Delete ROIs on current slice**.
 
-The drawn deletion region remains selected so it can be adjusted and reused.
+The drawn region remains selected so it can be adjusted and reused.
+
+### Assign a group to ROIs in a region
+
+1. Navigate to the source Z-slice.
+2. Draw a freehand **area** selection around the cells to classify.
+3. Open **ROI Region Actions**.
+4. Set the overlap threshold.
+5. Enter the target group number (`0-255`).
+6. Click **Set group for ROIs in region**.
+
+The matching ROI Manager rows remain selected. Their group and visual properties are updated as follows:
+
+```text
+Group: selected value
+Position: 0
+Outline color: magenta
+Line width: 0
+```
+
+Group `0` removes formal group membership while still applying the requested position and display properties.
 
 ### Zoom Control
 
@@ -88,7 +123,7 @@ macros/toolsets/
 ## Requirements
 
 - Fiji/ImageJ with Groovy scripting support
-- ROI Manager ROIs should have slice positions assigned when using slice-specific deletion
+- ROI Manager ROIs should have slice positions assigned before running a slice-specific region action
 
 ## Cleaning an older installation
 
