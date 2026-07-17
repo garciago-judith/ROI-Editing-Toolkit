@@ -17,7 +17,6 @@ import javax.swing.SwingUtilities
 import javax.swing.WindowConstants
 import javax.swing.border.EmptyBorder
 
-import java.awt.Color
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -66,7 +65,7 @@ SwingUtilities.invokeLater {
     groupPanel.add(new JLabel("Target ROI group:"))
 
     JSpinner groupSpinner =
-        new JSpinner(new SpinnerNumberModel(0, 0, 255, 1))
+        new JSpinner(new SpinnerNumberModel(1, 1, 255, 1))
     groupSpinner.setPreferredSize(new Dimension(65, 26))
     groupPanel.add(groupSpinner)
 
@@ -295,20 +294,9 @@ SwingUtilities.invokeLater {
             RoiManager roiManager = context.roiManager
             roiManager.setSelectedIndexes(selectedIndexes)
 
-            // Equivalent to RoiManager.setGroup(...) and
-            // RoiManager.setPosition(0) for the matched cells.
+            // Assign only the requested group. ImageJ applies
+            // the corresponding group color automatically.
             roiManager.setGroup(targetGroup)
-            roiManager.setPosition(0)
-
-            for (int index : selectedIndexes) {
-                Roi roi = roiManager.getRoi(index)
-                if (roi == null)
-                    continue
-
-                roi.setStrokeColor(Color.MAGENTA)
-                roi.setStrokeWidth(0.0)
-                roiManager.setRoi(roi, index)
-            }
 
             // Keep the affected cells selected in ROI Manager.
             roiManager.setSelectedIndexes(selectedIndexes)
@@ -317,7 +305,7 @@ SwingUtilities.invokeLater {
             statusLabel.setText(
                 "<html>Assigned <b>" + selectedIndexes.length +
                 "</b> ROI(s) to group " + targetGroup +
-                ".<br>Position: 0; color: magenta; line width: 0.</html>"
+                ". ImageJ applied the group color automatically.</html>"
             )
 
             IJ.showStatus(
