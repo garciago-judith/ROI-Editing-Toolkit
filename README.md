@@ -16,14 +16,12 @@ The same detected ROIs can then be processed in either of two ways:
 The group action:
 
 - assigns the selected ROIs to the group entered in the dialog;
-- sets their ROI position to `0`;
-- sets their outline color to magenta;
-- sets their line width to `0`;
+- preserves their existing slice position;
+- preserves their existing line width and other ROI properties;
+- lets ImageJ apply the corresponding group color automatically;
 - leaves the affected ROI Manager rows selected.
 
 The tool deliberately skips ROIs without an assigned slice position when finding candidates, so ROIs from unrelated planes are not processed accidentally.
-
-> **Position note:** after the group action sets an ROI position to `0`, that ROI is no longer associated with a particular slice. It will therefore be skipped by later slice-specific region searches.
 
 ### Zoom Control
 
@@ -87,19 +85,10 @@ The drawn region remains selected so it can be adjusted and reused.
 2. Draw a freehand **area** selection around the cells to classify.
 3. Open **ROI Region Actions**.
 4. Set the overlap threshold.
-5. Enter the target group number (`0-255`).
+5. Enter the target group number (`1-255`).
 6. Click **Set group for ROIs in region**.
 
-The matching ROI Manager rows remain selected. Their group and visual properties are updated as follows:
-
-```text
-Group: selected value
-Position: 0
-Outline color: magenta
-Line width: 0
-```
-
-Group `0` removes formal group membership while still applying the requested position and display properties.
+The matching ROI Manager rows remain selected. Only the group value is changed. ImageJ assigns the associated group color automatically; the ROI position and line width are not modified.
 
 ### Zoom Control
 
