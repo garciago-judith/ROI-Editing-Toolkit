@@ -19,7 +19,8 @@ The group action:
 - preserves their existing slice position;
 - preserves their existing line width and other ROI properties;
 - lets ImageJ apply the corresponding group color automatically;
-- leaves the affected ROI Manager rows selected.
+- keeps the affected ROI Manager rows selected while the source region exists;
+- deselects those rows when the source region is removed or replaced.
 
 The tool deliberately skips ROIs without an assigned slice position when finding candidates, so ROIs from unrelated planes are not processed accidentally.
 
@@ -88,7 +89,9 @@ The drawn region remains selected so it can be adjusted and reused.
 5. Enter the target group number (`1-255`).
 6. Click **Set group for ROIs in region**.
 
-The matching ROI Manager rows remain selected. Only the group value is changed. ImageJ assigns the associated group color automatically; the ROI position and line width are not modified.
+Only the group value is changed. ImageJ assigns the associated group color automatically; the ROI position and line width are not modified.
+
+The matching ROI Manager rows stay selected while the freehand region remains on the image. Removing the region with **Select None**, or replacing it with another selection, automatically deselects those ROI Manager rows.
 
 ### Zoom Control
 
