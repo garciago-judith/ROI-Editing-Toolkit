@@ -2,6 +2,7 @@ import ij.IJ
 import ij.ImagePlus
 import ij.WindowManager
 import ij.gui.Roi
+import ij.gui.RoiListener
 import ij.plugin.frame.RoiManager
 
 import javax.swing.Box
@@ -20,6 +21,8 @@ import javax.swing.border.EmptyBorder
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.FlowLayout
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import java.util.ArrayList
 import java.util.Collections
 
@@ -91,6 +94,41 @@ SwingUtilities.invokeLater {
     panel.add(Box.createVerticalStrut(6))
     panel.add(groupButton)
     panel.add(statusLabel)
+
+    // Tracks the image whose region produced the current ROI Manager selection.
+    // When that region is deleted or replaced, the ROI Manager rows are cleared.
+    Map selectionWatch = [image: null, manager: null]
+
+    RoiListener selectionListener = { ImagePlus changedImage, int eventId ->
+        if (eventId != RoiListener.DELETED)
+            return
+
+        if (selectionWatch.image == null ||
+            changedImage != selectionWatch.image)
+            return
+
+        RoiManager manager = selectionWatch.manager as RoiManager
+        selectionWatch.image = null
+        selectionWatch.manager = null
+
+        SwingUtilities.invokeLater {
+            if (manager != null)
+                manager.deselect()
+
+            statusLabel.setText(
+                "<html>Region selection removed.<br>" +
+                "ROI Manager selection cleared.</html>"
+            )
+            IJ.showStatus("ROI Manager selection cleared.")
+        }
+    } as RoiListener
+
+    Roi.addRoiListener(selectionListener)
+
+    def clearSelectionWatch = {
+        selectionWatch.image = null
+        selectionWatch.manager = null
+    }
 
     def getContext = {
         ImagePlus imp = WindowManager.getCurrentImage()
@@ -194,6 +232,7 @@ SwingUtilities.invokeLater {
             for (def point : points) {
                 int x = ((Number) point.x).intValue()
                 int y = ((Number) point.y).intValue()
+
                 if (region.contains(x, y))
                     pointsInside++
             }
@@ -225,6 +264,8 @@ SwingUtilities.invokeLater {
 
     deleteButton.addActionListener {
         try {
+            clearSelectionWatch()
+
             def context = getContext()
             if (context == null)
                 return
@@ -268,14 +309,18 @@ SwingUtilities.invokeLater {
 
     groupButton.addActionListener {
         try {
+            clearSelectionWatch()
+
             def context = getContext()
             if (context == null)
                 return
 
             def result = findMatches(context)
             ArrayList<Integer> indexes = result.indexes
+            RoiManager roiManager = context.roiManager
 
             if (indexes.isEmpty()) {
+                roiManager.deselect()
                 statusLabel.setText(
                     "<html>No ROIs matched the current slice, " +
                     "region, and threshold.</html>"
@@ -291,21 +336,21 @@ SwingUtilities.invokeLater {
             int targetGroup =
                 ((Number) groupSpinner.getValue()).intValue()
 
-            RoiManager roiManager = context.roiManager
             roiManager.setSelectedIndexes(selectedIndexes)
-
-            // Assign only the requested group. ImageJ applies
-            // the corresponding group color automatically.
             roiManager.setGroup(targetGroup)
 
-            // Keep the affected cells selected in ROI Manager.
-            roiManager.setSelectedIndexes(selectedIndexes)
+            // Restore the freehand region after ROI Manager operations,
+            // then keep its matching rows selected while that region exists.
             restoreImage(context)
+            roiManager.setSelectedIndexes(selectedIndexes)
+
+            selectionWatch.image = context.imp
+            selectionWatch.manager = roiManager
 
             statusLabel.setText(
                 "<html>Assigned <b>" + selectedIndexes.length +
                 "</b> ROI(s) to group " + targetGroup +
-                ". ImageJ applied the group color automatically.</html>"
+                ".<br>Rows will be deselected when the region is removed.</html>"
             )
 
             IJ.showStatus(
@@ -324,6 +369,14 @@ SwingUtilities.invokeLater {
             )
         }
     }
+
+    frame.addWindowListener(new WindowAdapter() {
+        @Override
+        void windowClosed(WindowEvent event) {
+            Roi.removeRoiListener(selectionListener)
+            clearSelectionWatch()
+        }
+    })
 
     frame.setContentPane(panel)
     frame.pack()
