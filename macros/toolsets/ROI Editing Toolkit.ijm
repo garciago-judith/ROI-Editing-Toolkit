@@ -13,3 +13,7 @@ macro "ROI Region Actions Action Tool - C900R11ddL33bbL3bb3" {
 macro "Zoom Control Action Tool - C00fO4488L88ccLcc99L99dd" {
     doCommand("Zoom Control");
 }
+
+macro "Projection Overlay Action Tool - C080R2266R6aaaL2266L6acc" {
+    doCommand("Projection Overlay");
+}

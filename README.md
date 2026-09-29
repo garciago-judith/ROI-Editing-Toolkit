@@ -34,9 +34,20 @@ A persistent, resizable vertical zoom slider for the currently active ImageJ ima
 - Default height is approximately 720 px
 - Does not modify the active ROI or ROI Manager
 
+### Projection Overlay
+
+Creates a Z projection of the active image and overlays **all** ROI Manager ROIs on it, even if they were drawn on different Z slices.
+
+- Projects along Z only, separately for every channel and timepoint (channels and timepoints are preserved)
+- Works for Z stacks, Z + channels, Z + time, and Z + channels + time
+- Choose the projection type, Z range and, where present, the channel and timepoint ranges
+- Each ROI is shown only on its own channel and timepoint; ROIs without a channel or timepoint appear on all
+- Uses the selected ROI Manager rows, or all ROIs if none are selected
+- Group colors and line widths are kept; the original image, ROIs and ROI Manager are not modified
+
 ## Toolbar integration
 
-Both toolbar buttons are provided in one combined ImageJ toolset:
+All toolbar buttons are provided in one combined ImageJ toolset:
 
 ```text
 macros/toolsets/ROI Editing Toolkit.ijm
@@ -66,6 +77,7 @@ The commands are also available directly from:
 
 - `Plugins > ROI Editing Toolkit > Delete ROIs in Region`
 - `Plugins > ROI Editing Toolkit > Zoom Control`
+- `Plugins > ROI Editing Toolkit > Projection Overlay`
 
 ## Usage
 
@@ -107,6 +119,7 @@ The slider follows whichever image window is currently active.
 scripts/Plugins/ROI_Editing_Toolkit/
   Delete_ROIs_in_Region.groovy
   Zoom_Control.groovy
+  Projection_Overlay.groovy
 
 macros/toolsets/
   ROI Editing Toolkit.ijm
