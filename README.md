@@ -8,6 +8,8 @@ A small collection of Fiji/ImageJ utilities for manual ROI review and editing.
 
 Draw a freehand area selection and identify ROI Manager entries that fall within it on the current image slice. The required percentage of ROI area inside the selection is configurable.
 
+Alternatively, draw a freehand (or straight / segmented) **line** through the cells: every ROI on the current slice that the line crosses is picked, regardless of the threshold. This is convenient for sweeping across scattered cells without enclosing their neighbours.
+
 The same detected ROIs can then be processed in either of two ways:
 
 - **Delete ROIs on current slice**
@@ -45,6 +47,18 @@ Creates a Z projection of the active image and overlays **all** ROI Manager ROIs
 - Uses the selected ROI Manager rows, or all ROIs if none are selected
 - Group colors and line widths are kept; the original image, ROIs and ROI Manager are not modified
 
+### Neighbor Slice Overlay
+
+A persistent panel that shows, on the slice you are currently editing, the ROIs drawn on the neighboring Z slices, so cells that were already outlined on another slice are not outlined twice.
+
+- Set how many slices above and below to include (use a large number to show every slice)
+- ROIs from slices above (lower Z) are drawn dashed in cyan, from slices below (higher Z) dashed in orange
+- Optionally fades the outlines with distance from the current slice
+- Updates automatically when you change slice, switch image, or add or delete ROIs; **Refresh** forces an update after editing an ROI in place
+- ROIs on the current slice are not repeated; use the ROI Manager's **Show All** for those
+- Only ROIs from the current timepoint are shown; channel is ignored
+- Only the image's overlay is changed, and only the outlines this tool added; the ROI Manager is not modified. Closing the panel removes the outlines
+
 ## Toolbar integration
 
 All toolbar buttons are provided in one combined ImageJ toolset:
@@ -78,6 +92,7 @@ The commands are also available directly from:
 - `Plugins > ROI Editing Toolkit > Delete ROIs in Region`
 - `Plugins > ROI Editing Toolkit > Zoom Control`
 - `Plugins > ROI Editing Toolkit > Projection Overlay`
+- `Plugins > ROI Editing Toolkit > Neighbor Slice Overlay`
 
 ## Usage
 
@@ -95,15 +110,15 @@ The drawn region remains selected so it can be adjusted and reused.
 ### Assign a group to ROIs in a region
 
 1. Navigate to the source Z-slice.
-2. Draw a freehand **area** selection around the cells to classify.
+2. Draw a freehand **area** selection around the cells to classify, or a freehand **line** passing through them.
 3. Open **ROI Region Actions**.
-4. Set the overlap threshold.
+4. Set the overlap threshold (area selections only).
 5. Enter the target group number (`1-255`).
 6. Click **Set group for ROIs in region**.
 
 Only the group value is changed. ImageJ assigns the associated group color automatically; the ROI position and line width are not modified.
 
-The matching ROI Manager rows stay selected while the freehand region remains on the image. Removing the region with **Select None**, or replacing it with another selection, automatically deselects those ROI Manager rows.
+The matching ROI Manager rows stay selected while the freehand region or line remains on the image. Removing the region with **Select None**, or replacing it with another selection, automatically deselects those ROI Manager rows.
 
 ### Zoom Control
 
@@ -120,6 +135,7 @@ scripts/Plugins/ROI_Editing_Toolkit/
   Delete_ROIs_in_Region.groovy
   Zoom_Control.groovy
   Projection_Overlay.groovy
+  Neighbor_Slice_Overlay.groovy
 
 macros/toolsets/
   ROI Editing Toolkit.ijm
