@@ -17,3 +17,7 @@ macro "Zoom Control Action Tool - C00fO4488L88ccLcc99L99dd" {
 macro "Projection Overlay Action Tool - C080R2266R6aaaL2266L6acc" {
     doCommand("Projection Overlay");
 }
+
+macro "Neighbor Slice Overlay Action Tool - C0bbO1177Cf90O8877C000O4477" {
+    doCommand("Neighbor Slice Overlay");
+}

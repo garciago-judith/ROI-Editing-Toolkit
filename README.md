@@ -45,6 +45,18 @@ Creates a Z projection of the active image and overlays **all** ROI Manager ROIs
 - Uses the selected ROI Manager rows, or all ROIs if none are selected
 - Group colors and line widths are kept; the original image, ROIs and ROI Manager are not modified
 
+### Neighbor Slice Overlay
+
+A persistent panel that shows, on the slice you are currently editing, the ROIs drawn on the neighboring Z slices, so cells that were already outlined on another slice are not outlined twice.
+
+- Set how many slices above and below to include (use a large number to show every slice)
+- ROIs from slices above (lower Z) are drawn dashed in cyan, from slices below (higher Z) dashed in orange
+- Optionally fades the outlines with distance from the current slice
+- Updates automatically when you change slice, switch image, or add or delete ROIs; **Refresh** forces an update after editing an ROI in place
+- ROIs on the current slice are not repeated; use the ROI Manager's **Show All** for those
+- Only ROIs from the current timepoint are shown; channel is ignored
+- Only the image's overlay is changed, and only the outlines this tool added; the ROI Manager is not modified. Closing the panel removes the outlines
+
 ## Toolbar integration
 
 All toolbar buttons are provided in one combined ImageJ toolset:
@@ -78,6 +90,7 @@ The commands are also available directly from:
 - `Plugins > ROI Editing Toolkit > Delete ROIs in Region`
 - `Plugins > ROI Editing Toolkit > Zoom Control`
 - `Plugins > ROI Editing Toolkit > Projection Overlay`
+- `Plugins > ROI Editing Toolkit > Neighbor Slice Overlay`
 
 ## Usage
 
@@ -120,6 +133,7 @@ scripts/Plugins/ROI_Editing_Toolkit/
   Delete_ROIs_in_Region.groovy
   Zoom_Control.groovy
   Projection_Overlay.groovy
+  Neighbor_Slice_Overlay.groovy
 
 macros/toolsets/
   ROI Editing Toolkit.ijm
