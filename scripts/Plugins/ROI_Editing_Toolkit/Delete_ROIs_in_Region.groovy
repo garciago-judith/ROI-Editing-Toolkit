@@ -81,8 +81,9 @@ SwingUtilities.invokeLater {
     groupButton.setAlignmentX(Component.CENTER_ALIGNMENT)
 
     JLabel statusLabel = new JLabel(
-        "<html>Draw a freehand area selection.<br>" +
-        "Both actions use the current slice and threshold.</html>"
+        "<html>Draw a freehand area to enclose ROIs,<br>" +
+        "or a freehand line to pick the ROIs it crosses.<br>" +
+        "The threshold applies to areas only.</html>"
     )
     statusLabel.setBorder(new EmptyBorder(8, 2, 0, 2))
     statusLabel.setAlignmentX(Component.LEFT_ALIGNMENT)
@@ -143,10 +144,11 @@ SwingUtilities.invokeLater {
         }
 
         Roi selectionRegion = imp.getRoi()
-        if (selectionRegion == null || !selectionRegion.isArea()) {
+        if (selectionRegion == null ||
+            !(selectionRegion.isArea() || selectionRegion.isLine())) {
             JOptionPane.showMessageDialog(
                 frame,
-                "Draw a freehand area selection on the image first.",
+                "Draw a freehand area or line selection on the image first.",
                 WINDOW_TITLE,
                 JOptionPane.WARNING_MESSAGE
             )
@@ -186,6 +188,12 @@ SwingUtilities.invokeLater {
         Roi region = context.region
         Roi[] rois = roiManager.getRoisAsArray()
 
+        // For a line selection, an ROI matches when the line passes through it;
+        // the area threshold does not apply. The path is sampled every pixel.
+        boolean lineMode = region.isLine()
+        def linePath = lineMode ?
+            region.getInterpolatedPolygon(1.0, false) : null
+
         ArrayList<Integer> indexes = new ArrayList<Integer>()
         int unpositionedCount = 0
 
@@ -223,6 +231,19 @@ SwingUtilities.invokeLater {
 
             if (!onCurrentPlane)
                 continue
+
+            if (lineMode) {
+                for (int p = 0; p < linePath.npoints; p++) {
+                    int x = (int) Math.floor(linePath.xpoints[p])
+                    int y = (int) Math.floor(linePath.ypoints[p])
+
+                    if (candidate.contains(x, y)) {
+                        indexes.add(i)
+                        break
+                    }
+                }
+                continue
+            }
 
             def points = candidate.getContainedPoints()
             if (points == null || points.length == 0)
